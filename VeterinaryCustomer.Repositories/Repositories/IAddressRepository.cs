@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using MongoDB.Driver;
 using VeterinaryCustomer.Domain.Models;
 
-namespace VeterinaryCustomr.Repositories.Repositories
+namespace VeterinaryCustomer.Repositories.Repositories
 {
     public interface IAddressRepository
     {

@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using VeterinaryCustomer.Domain.Models;
 using Microsoft.AspNetCore.JsonPatch;
 
-namespace VeterinaryCustomr.Repositories.Repositories
+namespace VeterinaryCustomer.Repositories.Repositories
 {
     public class AddressRepository : IAddressRepository
     {
@@ -31,7 +31,7 @@ namespace VeterinaryCustomr.Repositories.Repositories
 
         public async Task<Address> GetByCustomerIdAsync(string customerId)
         {
-            var filter = Builders<Address>.Filter.Eq("customer_id", customerId);
+            var filter = Builders<Address>.Filter.Eq(a => a.CustomerId, customerId);
             return await _collection.FindAsync(filter).Result.FirstOrDefaultAsync();
         }
 
@@ -40,7 +40,10 @@ namespace VeterinaryCustomr.Repositories.Repositories
         public async Task UpdateAsync(Address address, JsonPatchDocument<Address> patchDocument)
         {
             patchDocument.ApplyTo(address);
-            var filter = Builders<Address>.Filter.Eq("customer_id", address.CustomerId);
+            address.UpdatedAt = DateTime.UtcNow;
+
+            var filter = Builders<Address>.Filter.Eq(a => a.CustomerId, address.CustomerId);
+
             await _collection.ReplaceOneAsync(filter, address);
         }
 

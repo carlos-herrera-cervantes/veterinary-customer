@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VeterinaryCustomer.Domain\VeterinaryCustomr.Domain.csproj" />
-    <ProjectReference Include="..\VeterinaryCustomer.Repositories\VeterinaryCustomr.Repositories.csproj" />
+    <ProjectReference Include="..\VeterinaryCustomer.Domain\VeterinaryCustomer.Domain.csproj" />
+    <ProjectReference Include="..\VeterinaryCustomer.Repositories\VeterinaryCustomer.Repositories.csproj" />
     <ProjectReference Include="..\VeterinaryCustomer.Web\VeterinaryCustomer.Web.csproj" />
   </ItemGroup>
 
