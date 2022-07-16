@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using MongoDB.Driver;
 using Moq;
 using VeterinaryCustomer.Domain.Models;
-using VeterinaryCustomr.Repositories.Repositories;
+using VeterinaryCustomer.Repositories.Repositories;
 using Xunit;
 
 namespace VeterinaryCustomer.Tests.Repositories

@@ -30,7 +30,7 @@ namespace VeterinaryCustomer.Repositories.Repositories
 
         public async Task<Avatar> GetByCustomerIdAsync(string customerId)
         {
-            var filter = Builders<Avatar>.Filter.Eq("customer_id", customerId);
+            var filter = Builders<Avatar>.Filter.Eq(a => a.CustomerId, customerId);
             return await _collection.FindAsync(filter).Result.FirstOrDefaultAsync();
         }
 
@@ -38,13 +38,14 @@ namespace VeterinaryCustomer.Repositories.Repositories
 
         public async Task UpdateAsync(Avatar avatar)
         {
-            var filter = Builders<Avatar>.Filter.Eq("customer_id", avatar.CustomerId);
+            avatar.UpdatedAt = DateTime.UtcNow;
+            var filter = Builders<Avatar>.Filter.Eq(a => a.CustomerId, avatar.CustomerId);
             await _collection.ReplaceOneAsync(filter, avatar);
         }
 
         public async Task DeleteAsync(string customerId)
         {
-            var filter = Builders<Avatar>.Filter.Eq("customer_id", customerId);
+            var filter = Builders<Avatar>.Filter.Eq(a => a.CustomerId, customerId);
             await _collection.DeleteOneAsync(filter);    
         }
 

@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace VeterinaryCustomer.Domain.Models
 {
@@ -7,9 +8,11 @@ namespace VeterinaryCustomer.Domain.Models
     {
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonElement("customer_id")]
-        public int CustomerId { get; set; }
+        [JsonProperty("customer_id")]
+        public string CustomerId { get; set; }
 
         [BsonElement("path")]
+        [JsonProperty("path")]
         public string Path { get; set; }
     }
 }

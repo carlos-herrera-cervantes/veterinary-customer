@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>VeterinaryCustomr.Repositories</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VeterinaryCustomer.Domain\VeterinaryCustomr.Domain.csproj" />
+    <ProjectReference Include="..\VeterinaryCustomer.Domain\VeterinaryCustomer.Domain.csproj" />
   </ItemGroup>
 
 </Project>

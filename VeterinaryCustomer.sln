@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryCustomr.Domain", "VeterinaryCustomer.Domain\VeterinaryCustomr.Domain.csproj", "{DDF235E8-FC0B-4F94-92C2-A1C70FD6E502}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryCustomer.Domain", "VeterinaryCustomer.Domain\VeterinaryCustomer.Domain.csproj", "{DDF235E8-FC0B-4F94-92C2-A1C70FD6E502}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryCustomr.Repositories", "VeterinaryCustomer.Repositories\VeterinaryCustomr.Repositories.csproj", "{238ADA0A-E299-4D90-9C48-417AD84E4FBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryCustomer.Repositories", "VeterinaryCustomer.Repositories\VeterinaryCustomer.Repositories.csproj", "{238ADA0A-E299-4D90-9C48-417AD84E4FBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeterinaryCustomer.Tests", "VeterinaryCustomer.Tests\VeterinaryCustomer.Tests.csproj", "{6B0C277A-D72B-4B9A-955F-B74A889A999F}"
 EndProject

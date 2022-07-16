@@ -9,4 +9,8 @@
     <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VeterinaryCustomer.Repositories\VeterinaryCustomer.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>

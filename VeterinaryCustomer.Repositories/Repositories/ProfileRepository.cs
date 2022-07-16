@@ -38,13 +38,14 @@ namespace VeterinaryCustomer.Repositories.Repositories
 
         public async Task<Profile> GetByCustomerIdAsync(string customerId)
         {
-            var filter = Builders<Profile>.Filter.Eq("customer_id", customerId);
+            var filter = Builders<Profile>.Filter.Eq(p => p.CustomerId, customerId);
             return await _collection.FindAsync(filter).Result.FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(Profile profile)
         {
-            var filter = Builders<Profile>.Filter.Eq("customer_id", profile.CustomerId);
+            profile.UpdatedAt = DateTime.UtcNow;
+            var filter = Builders<Profile>.Filter.Eq(p => p.CustomerId, profile.CustomerId);
             await _collection.ReplaceOneAsync(filter, profile);
         }
 
