@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VeterinaryCustomer.Repositories\VeterinaryCustomer.Repositories.csproj" />
+    <ProjectReference Include="..\VeterinaryCustomer.Services\VeterinaryCustomer.Services.csproj" />
   </ItemGroup>
 
 </Project>
