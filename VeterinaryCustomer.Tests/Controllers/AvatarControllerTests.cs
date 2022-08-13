@@ -1,9 +1,11 @@
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using VeterinaryCustomer.Domain.Models;
 using VeterinaryCustomer.Repositories.Repositories;
+using VeterinaryCustomer.Services.Aws;
 using VeterinaryCustomer.Web.Controllers;
 using Xunit;
 
@@ -16,6 +18,8 @@ namespace VeterinaryCustomer.Tests.Controllers
 
         private readonly Mock<IAvatarRepository> _mockAvatarRepository;
 
+        private readonly Mock<IS3Service> _mockS3Service;
+
         #endregion
 
         #region snippet_Constructors
@@ -23,6 +27,7 @@ namespace VeterinaryCustomer.Tests.Controllers
         public AvatarControllerTests()
         {
             _mockAvatarRepository = new Mock<IAvatarRepository>();
+            _mockS3Service = new Mock<IS3Service>();
         }
 
         #endregion
@@ -35,7 +40,7 @@ namespace VeterinaryCustomer.Tests.Controllers
             _mockAvatarRepository
                 .Setup(x => x.GetByCustomerIdAsync(It.IsAny<string>())).ReturnsAsync(() => null);
 
-            var avatarController = new AvatarController(_mockAvatarRepository.Object);
+            var avatarController = new AvatarController(_mockAvatarRepository.Object, _mockS3Service.Object);
             var response = await avatarController.GetMeAsync("dummy-id");
             var notFoundResult = response as NotFoundResult;
 
@@ -51,7 +56,7 @@ namespace VeterinaryCustomer.Tests.Controllers
             _mockAvatarRepository
                 .Setup(x => x.GetByCustomerIdAsync(It.IsAny<string>())).ReturnsAsync(new Avatar{});
 
-            var avatarController = new AvatarController(_mockAvatarRepository.Object);
+            var avatarController = new AvatarController(_mockAvatarRepository.Object, _mockS3Service.Object);
             var response = await avatarController.GetMeAsync("dummy-id");
             var okObjectResult = response as OkObjectResult;
 
@@ -66,16 +71,24 @@ namespace VeterinaryCustomer.Tests.Controllers
         {
             _mockAvatarRepository
                 .Setup(x => x.CreateAsync(It.IsAny<Avatar>())).Returns(Task.FromResult(true));
+            _mockS3Service
+                .Setup(x => x.PutObjectAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
+                .ReturnsAsync("http://localhost:4566/veterinary-user-avatars-dev/myavatar.png");
             
             var mockFile = new Mock<IFormFile>();
 
             mockFile.Setup(x => x.FileName).Returns("dummy-avatar.png");
 
-            var avatarController = new AvatarController(_mockAvatarRepository.Object);
+            var avatarController = new AvatarController(_mockAvatarRepository.Object, _mockS3Service.Object);
             var response = await avatarController.CreateAsync("dummy-id", mockFile.Object);
             var createdResult = response as CreatedResult;
 
             _mockAvatarRepository.Verify(x => x.CreateAsync(It.IsAny<Avatar>()), Times.Once);
+            _mockS3Service.Verify
+                (
+                    x => x.PutObjectAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()),
+                    Times.Once
+                );
 
             Assert.IsType<CreatedResult>(response);
             Assert.Equal(StatusCodes.Status201Created, createdResult.StatusCode);
@@ -88,12 +101,17 @@ namespace VeterinaryCustomer.Tests.Controllers
                 .Setup(x => x.GetByCustomerIdAsync(It.IsAny<string>())).ReturnsAsync(() => null);
 
             var mockFile = new Mock<IFormFile>();
-            var avatarController = new AvatarController(_mockAvatarRepository.Object);
+            var avatarController = new AvatarController(_mockAvatarRepository.Object, _mockS3Service.Object);
             var response = await avatarController.UpdateMeAsync("dummy-id", mockFile.Object);
             var notFoundResult = response as NotFoundResult;
 
             _mockAvatarRepository.Verify(x => x.GetByCustomerIdAsync(It.IsAny<string>()), Times.Once);
             _mockAvatarRepository.Verify(x => x.UpdateAsync(It.IsAny<Avatar>()), Times.Never);
+            _mockS3Service.Verify
+                (
+                    x => x.PutObjectAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()),
+                    Times.Never
+                );
 
             Assert.IsType<NotFoundResult>(response);
             Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
@@ -106,17 +124,25 @@ namespace VeterinaryCustomer.Tests.Controllers
                 .Setup(x => x.GetByCustomerIdAsync(It.IsAny<string>())).ReturnsAsync(new Avatar{});
             _mockAvatarRepository
                 .Setup(x => x.UpdateAsync(It.IsAny<Avatar>())).Returns(Task.FromResult(true));
+            _mockS3Service
+                .Setup(x => x.PutObjectAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
+                .ReturnsAsync("http://localhost:4566/veterinary-user-avatars-dev/myavatar.png");
 
             var mockFile = new Mock<IFormFile>();
 
             mockFile.Setup(x => x.FileName).Returns("dummy-avatar.png");
 
-            var avatarController = new AvatarController(_mockAvatarRepository.Object);
+            var avatarController = new AvatarController(_mockAvatarRepository.Object, _mockS3Service.Object);
             var response = await avatarController.UpdateMeAsync("dummy-id", mockFile.Object);
             var okObjectResult = response as OkObjectResult;
 
             _mockAvatarRepository.Verify(x => x.GetByCustomerIdAsync(It.IsAny<string>()), Times.Once);
             _mockAvatarRepository.Verify(x => x.UpdateAsync(It.IsAny<Avatar>()), Times.Once);
+            _mockS3Service.Verify
+                (
+                    x => x.PutObjectAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()),
+                    Times.Once
+                );
 
             Assert.IsType<OkObjectResult>(response);
             Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
@@ -126,13 +152,20 @@ namespace VeterinaryCustomer.Tests.Controllers
         public async Task DeleteMeAsyncShouldReturn204()
         {
             _mockAvatarRepository
+                .Setup(x => x.GetByCustomerIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(new Avatar{});
+            _mockAvatarRepository
                 .Setup(x => x.DeleteAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+            _mockS3Service
+                .Setup(x => x.DeleteObjectAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
             
-            var avatarController = new AvatarController(_mockAvatarRepository.Object);
+            var avatarController = new AvatarController(_mockAvatarRepository.Object, _mockS3Service.Object);
             var response = await avatarController.DeleteMeAsync("dummy-id");
             var noContentResult = response as NoContentResult;
 
+            _mockAvatarRepository.Verify(x => x.GetByCustomerIdAsync(It.IsAny<string>()), Times.Once);
             _mockAvatarRepository.Verify(x => x.DeleteAsync(It.IsAny<string>()), Times.Once);
+            _mockS3Service.Verify(x => x.DeleteObjectAsync(It.IsAny<string>()), Times.Once);
 
             Assert.IsType<NoContentResult>(response);
             Assert.Equal(StatusCodes.Status204NoContent, noContentResult.StatusCode);
