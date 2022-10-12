@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using VeterinaryCustomer.Domain.Models;
 
-namespace VeterinaryCustomer.Repositories.Repositories
+namespace VeterinaryCustomer.Repositories.Repositories;
+
+public interface IProfileRepository
 {
-    public interface IProfileRepository
-    {
-        Task<int> CountAsync(FilterDefinition<Profile> filterDefinition);
+    Task<int> CountAsync(FilterDefinition<Profile> filterDefinition);
 
-        Task<IEnumerable<Profile>> GetAllAsync(int page, int pageSize);
+    Task<IEnumerable<Profile>> GetAllAsync(int page, int pageSize);
 
-        Task<Profile> GetByCustomerIdAsync(string customerId);
+    Task<Profile> GetByCustomerIdAsync(string customerId);
 
-        Task UpdateAsync(Profile profile);
-    }
+    Task UpdateAsync(Profile profile);
 }
