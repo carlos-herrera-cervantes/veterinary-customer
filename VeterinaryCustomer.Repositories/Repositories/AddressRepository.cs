@@ -47,5 +47,8 @@ public class AddressRepository : IAddressRepository
         await _collection.ReplaceOneAsync(filter, address);
     }
 
+    public async Task DeleteManyAsync(FilterDefinition<Address> filter)
+        => await _collection.DeleteManyAsync(filter);
+
     #endregion
 }

@@ -42,12 +42,17 @@ public class ProfileRepository : IProfileRepository
         return await _collection.FindAsync(filter).Result.FirstOrDefaultAsync();
     }
 
+    public async Task CreateAsync(Profile profile) => await _collection.InsertOneAsync(profile);
+
     public async Task UpdateAsync(Profile profile)
     {
         profile.UpdatedAt = DateTime.UtcNow;
         var filter = Builders<Profile>.Filter.Eq(p => p.CustomerId, profile.CustomerId);
         await _collection.ReplaceOneAsync(filter, profile);
     }
+
+    public async Task DeleteManyAsync(FilterDefinition<Profile> filter)
+        => await _collection.DeleteManyAsync(filter);
 
     #endregion
 }

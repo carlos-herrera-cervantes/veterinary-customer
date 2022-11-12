@@ -14,4 +14,6 @@ public interface IAddressRepository
     Task CreateAsync(Address address);
 
     Task UpdateAsync(Address address, JsonPatchDocument<Address> patchDocument);
+
+    Task DeleteManyAsync(FilterDefinition<Address> filter);
 }
