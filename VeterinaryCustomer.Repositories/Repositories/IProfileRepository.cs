@@ -7,6 +7,8 @@ namespace VeterinaryCustomer.Repositories.Repositories;
 
 public interface IProfileRepository
 {
+    Task CreateAsync(Profile profile);
+
     Task<int> CountAsync(FilterDefinition<Profile> filterDefinition);
 
     Task<IEnumerable<Profile>> GetAllAsync(int page, int pageSize);
@@ -14,4 +16,6 @@ public interface IProfileRepository
     Task<Profile> GetByCustomerIdAsync(string customerId);
 
     Task UpdateAsync(Profile profile);
+
+    Task DeleteManyAsync(FilterDefinition<Profile> filter);
 }
