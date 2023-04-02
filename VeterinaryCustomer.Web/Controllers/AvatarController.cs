@@ -8,10 +8,11 @@ using VeterinaryCustomer.Domain.Models;
 using VeterinaryCustomer.Repositories.Repositories;
 using VeterinaryCustomer.Services.Aws;
 using VeterinaryCustomer.Web.Attributes;
+using VeterinaryCustomer.Web.Config;
 
 namespace VeterinaryCustomer.Web.Controllers;
 
-[Route("api/v1/customers/avatars")]
+[Route($"{ApiConfig.BasePath}/v1/avatar")]
 [Produces("application/json")]
 [Consumes("multipart/form-data")]
 [ApiController]
