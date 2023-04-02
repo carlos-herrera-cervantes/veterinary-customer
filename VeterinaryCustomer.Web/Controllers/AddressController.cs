@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using VeterinaryCustomer.Domain.Models;
 using VeterinaryCustomer.Repositories.Repositories;
+using VeterinaryCustomer.Web.Config;
 
 namespace VeterinaryCustomer.Web.Controllers;
 
-[Route("api/v1/customers/address")]
+[Route($"{ApiConfig.BasePath}/v1/address")]
 [Produces("application/json")]
 [Consumes("application/json")]
 [ApiController]

@@ -4,10 +4,11 @@ using MongoDB.Driver;
 using VeterinaryCustomer.Domain.Models;
 using VeterinaryCustomer.Repositories.Repositories;
 using VeterinaryCustomer.Web.Types;
+using VeterinaryCustomer.Web.Config;
 
 namespace VeterinaryCustomer.Web.Controllers;
 
-[Route("api/v1/customers/profiles")]
+[Route($"{ApiConfig.BasePath}/v1/profiles")]
 [Produces("application/json")]
 [Consumes("application/json")]
 [ApiController]
