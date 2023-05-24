@@ -39,8 +39,7 @@ public class AddressController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync
-    (
+    public async Task<IActionResult> CreateAsync(
         [FromHeader(Name = "user-id")] string userId,
         [FromBody] Address address
     )
@@ -51,8 +50,7 @@ public class AddressController : ControllerBase
     }
 
     [HttpPatch("me")]
-    public async Task<IActionResult> UpdateMeAsync
-    (
+    public async Task<IActionResult> UpdateMeAsync(
         [FromHeader(Name = "user-id")] string userId,
         [FromBody] JsonPatchDocument<Address> patchDocument
     )

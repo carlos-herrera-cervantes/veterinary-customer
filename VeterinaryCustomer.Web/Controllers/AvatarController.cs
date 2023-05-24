@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VeterinaryCustomer.Domain.Models;
@@ -53,10 +54,25 @@ public class AvatarController : ControllerBase
         return Ok(avatar);
     }
 
+    [HttpGet("{id}")]
+    [ExcludeFromCodeCoverage]
+    public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
+    {
+        var avatar = await _avatarRepository.GetByCustomerIdAsync(id);
+
+        if (avatar is null) return NotFound();
+
+        var bucketName = Environment.GetEnvironmentVariable("S3_BUCKET");
+        var s3Endpoint = Environment.GetEnvironmentVariable("S3_ENDPOINT");
+
+        avatar.Path = $"{s3Endpoint}/{bucketName}/{avatar.Path}";
+
+        return Ok(avatar);
+    }
+
     [HttpPost]
     [RequestSizeLimit(2_000_000)]
-    public async Task<IActionResult> CreateAsync
-    (
+    public async Task<IActionResult> CreateAsync(
         [FromHeader(Name = "user-id")] string userId,
         [Required][FromForm] IFormFile image
     )
@@ -77,8 +93,7 @@ public class AvatarController : ControllerBase
 
     [HttpPatch("me")]
     [RequestSizeLimit(2_000_000)]
-    public async Task<IActionResult> UpdateMeAsync
-    (
+    public async Task<IActionResult> UpdateMeAsync(
         [FromHeader(Name = "user-id")] string userId,
         [Required][FromForm] IFormFile image
     )

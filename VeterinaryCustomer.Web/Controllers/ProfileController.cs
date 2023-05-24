@@ -65,8 +65,7 @@ public class ProfileController : ControllerBase
     }
 
     [HttpPatch("me")]
-    public async Task<IActionResult> UpdateMeAsync
-    (
+    public async Task<IActionResult> UpdateMeAsync(
         [FromHeader(Name = "user-id")] string userId,
         [FromBody] UpdateProfileDto changes
     )
